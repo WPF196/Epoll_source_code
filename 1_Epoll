@@ -1,0 +1,72 @@
+// epoll_event 结构体
+typedef union epoll_data
+{
+    void* ptr;              // 用户自定义信息
+    int fd;                 // 文件描述符
+    __uint32_t u32;
+    __uint64_t u64;
+}epoll_data_t;
+
+struct epoll_event
+{
+    __uint32_t events;      // 事件
+    epoll_data_t data;      // 用户数据变量
+}
+/*
+    events事件类型：
+    > EPOLLIN：需要读取的情况；
+    > EPOLLOUT：输出换成为空，可以立即发送数据的情况；
+    > EPOLLPRI：收到OOB数据的情况；
+    > EPOLLRDHUP：断开连接或半关闭的情况（边缘触发方式下很有用）；
+    > EPOLLERR：发生错误的情况；
+    > EPOLLET：以边缘触发的方式得到事件通知;
+    > EPOLLONESHOT：发生一次事件后，响应的文件描述符不再接收到事件通知。
+*/
+
+
+
+// epoll 主要的三个接口 （头文件 <sys/epoll.h>）
+1. epoll_create(int size);
+/*
+    作用：
+    创建保存文件描述符的空间
+    
+    返回值：
+    成功返回epoll文件描述符，失败返回 -1
+
+    参数说明：
+    > size：epoll实例的大小，无实际意义，大于0即可
+*/
+2. epoll_ctl(int epfd, int op, int fd, epoll_event* event); 
+/*
+    作用：
+    向空间注册并注销文件描述符
+
+    返回值：
+    成功返回0， 失败返回-1
+
+    参数说明：
+    > epfd：用户注册监视对象的epoll例程的文件描述符；
+    > op：用于指定监视对象的添加、删除或更改等操作；
+    > fd：需要注册的监视对象文件描述符；
+    > event：监视对象的事件类型。
+
+    op选项：
+    EPOLL_CTL_ADD：将文件描述符注册到epoll例程；
+    EPOLL_CTL_DEL：从epoll例程中删除文件描述符；
+    EPOLL_CTL_MOD：更改注册的文件描述符的关注事件发生情况。
+*/
+3. epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout);
+/*
+    作用：
+    等待文件描述符发生变化
+
+    返回值：
+    成功返回发生事件的文件描述符数， 失败返回-1
+
+    参数说明：
+    > epfd：表示事件发生监视范围的epoll例程的文件描述符；
+    > events：保存发生事件的文件描述符集合的结构体地址值；
+    > maxevents：第二个参数中可以保存的最大事件数；
+    > timeout：以毫秒为单位的等待时间，传递 -1，一直等待直到发生事件
+*/
