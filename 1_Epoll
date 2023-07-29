@@ -40,7 +40,7 @@ struct epoll_event
 2. epoll_ctl(int epfd, int op, int fd, epoll_event* event); 
 /*
     作用：
-    向空间注册并注销文件描述符
+    向空间注册并注销文件描述符（管理整棵红黑树）
 
     返回值：
     成功返回0， 失败返回-1
@@ -59,7 +59,7 @@ struct epoll_event
 3. epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout);
 /*
     作用：
-    等待文件描述符发生变化
+    阻塞等待注册的事件发生，返回事件的数目，并将触发的事件写入events数组中。
 
     返回值：
     成功返回发生事件的文件描述符数， 失败返回-1
