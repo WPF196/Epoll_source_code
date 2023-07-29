@@ -12,5 +12,14 @@ struct epitem{
   struct list_head pwqlist;
   struct eventpoll *ep; // 当前epitem的所有者
   struct list_head fllink;
-  struct epoll_event; // epoll_ctl传入的用户数据
+  struct epoll_event event; // epoll_ctl传入的用户数据
 };
+
+
+// rbn结构体
+struct {											
+	struct type *rbe_left;		//指向左子树
+	struct type *rbe_right;		//指向右子树
+	struct type *rbe_parent;	//指向父节点
+	int rbe_color;			    //该节点的颜色
+} rb_node
